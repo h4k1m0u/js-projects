@@ -1,0 +1,21 @@
+{
+    "name": "three-projects",
+    "version": "1.0.0",
+    "description": "```bash npm init -y npm install webpack --save-dev npm install three --save ```",
+    "main": "index.js",
+    "scripts": {
+        "start": "webpack-dev-server --open",
+        "build": "webpack --mode=production"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.11",
+        "webpack-dev-server": "^3.11.0"
+    },
+    "dependencies": {
+        "three": "^0.117.1"
+    }
+}
