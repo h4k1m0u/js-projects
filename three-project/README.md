@@ -35,6 +35,15 @@ npm install --save-dev html-webpack-plugin
 npm install three --save
 ```
 
+### ESLint
+Run linter on javascript source file:
+
+```bash
+npm install eslint --save-dev
+npx eslint --init
+npx eslint src/app.js
+```
+
 
 # Tutorials
 - Short [tutorial][1] to get started with webpack.
