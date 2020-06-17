@@ -1,12 +1,33 @@
 // source: https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as dat from 'dat.gui';
+
+/*
+* GUI panel
+* https://davidwalsh.name/dat-gui
+*/
+// add parameters fields to panel
+const gui = new dat.GUI();
+const params = {
+  x: 0,
+  y: 0,
+  z: 0,
+  visible: true,
+  color: 0x00aaff,
+};
+gui.add(params, 'x', -100, 100, 0.1);
+gui.add(params, 'y', -100, 100, 0.1);
+gui.add(params, 'z', -100, 100, 0.1);
+gui.add(params, 'visible');
+gui.addColor(params, 'color');
 
 /*
 * Scene
 */
 // setup scene
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xdddddd);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight,
   0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
@@ -18,18 +39,22 @@ const controls = new OrbitControls(camera, renderer.domElement);
 camera.position.z = 5;
 controls.update();
 
+// lightbulb
+const light = new THREE.PointLight();
+light.position.set(-5, 5, 0);
+scene.add(light);
+
 /*
 * Objects
 */
-// add axes to scene
-const axes = new THREE.AxesHelper(5);
-scene.add(axes);
+// add axes & grid to scene
+scene.add(new THREE.AxesHelper(5));
+scene.add(new THREE.GridHelper(20, 20));
 
 // add cube to scene
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00aaff });
+const material = new THREE.MeshLambertMaterial({ color: 0x00aaff });
 const cube = new THREE.Mesh(geometry, material);
-cube.position.x = 3;
 scene.add(cube);
 
 // add points to scene
@@ -47,6 +72,11 @@ scene.add(meshPoints);
 const start = Date.now();
 
 function animate() {
+  // update box according to panels values
+  cube.visible = params.visible;
+  cube.position.set(params.x, params.y, params.z);
+  cube.material.color.set(params.color);
+
   // update orbit controls in each frame
   controls.update();
 
