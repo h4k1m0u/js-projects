@@ -1,6 +1,7 @@
 # Usage
 - Run development server: `npm run start`
 - Deployment: `npm run build`
+- After deployment, an http server is needed to serve sprite images: `python3 -m http.server`
 
 
 # Prerequisites
@@ -30,6 +31,12 @@ html-webpack-plugin is needed to generate automatically an index.html file:
 npm install --save-dev html-webpack-plugin
 ```
 
+file-loader is needed to copy images automatically on build:
+
+```bash
+npm install --save-dev file-loader
+```
+
 ### Three.js
 ```
 npm install three --save
@@ -51,3 +58,9 @@ npx eslint src/app.js
 
 [1]: https://medium.com/@yakubova92/intro-to-webpack-46e8862d6627
 [2]: https://hackernoon.com/webpack-the-basics-2712a7ad640b
+
+
+# Icons
+Icons are available on [this website][4] on a permissive license.
+
+[4]: https://iconify.design/icon-sets/

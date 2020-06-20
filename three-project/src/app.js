@@ -1,7 +1,11 @@
-// source: https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
+// import libraries
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
+
+// import images
+import pathImageLeft from './images/mdi-light chevron-left.png';
+import pathImageRight from './images/mdi-light chevron-right.png';
 
 /*
 * GUI panel
@@ -30,7 +34,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xdddddd);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight,
   0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -64,6 +68,19 @@ geometryPoints.vertices = coords.map((coord) => new THREE.Vector3(coord[0], coor
 const materialPoints = new THREE.PointsMaterial({ size: 0.2, color: 0xffffff });
 const meshPoints = new THREE.Points(geometryPoints, materialPoints);
 scene.add(meshPoints);
+
+// add arrow sprites to scene
+const textureSpriteLeft = new THREE.TextureLoader().load(pathImageLeft);
+const materialSpriteLeft = new THREE.SpriteMaterial({ map: textureSpriteLeft });
+const spriteLeft = new THREE.Sprite(materialSpriteLeft);
+spriteLeft.position.set(-1, 1, 0);
+scene.add(spriteLeft);
+
+const textureSpriteRight = new THREE.TextureLoader().load(pathImageRight);
+const materialSpriteRight = new THREE.SpriteMaterial({ map: textureSpriteRight });
+const spriteRight = new THREE.Sprite(materialSpriteRight);
+spriteRight.position.set(1, 1, 0);
+scene.add(spriteRight);
 
 /*
 * Loop
