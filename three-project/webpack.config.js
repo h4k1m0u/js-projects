@@ -7,10 +7,6 @@ module.exports = {
     // generated inside dist/ by default
     filename: 'bundle.js',
   },
-  devServer: {
-    // folder to serve by webpack-dev-server
-    contentBase: path.join(__dirname, 'dist'),
-  },
   module: {
     rules: [
       {

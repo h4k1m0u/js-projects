@@ -67,18 +67,44 @@ const material = new THREE.MeshLambertMaterial({ color: 0x00aaff });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-// add arrow sprites to scene
+// arrow sprites
 const textureSpriteLeft = new THREE.TextureLoader().load(pathImageLeft);
 const materialSpriteLeft = new THREE.SpriteMaterial({ map: textureSpriteLeft });
 const spriteLeft = new THREE.Sprite(materialSpriteLeft);
 spriteLeft.position.set(-1, 1, 0);
-scene.add(spriteLeft);
 
 const textureSpriteRight = new THREE.TextureLoader().load(pathImageRight);
 const materialSpriteRight = new THREE.SpriteMaterial({ map: textureSpriteRight });
 const spriteRight = new THREE.Sprite(materialSpriteRight);
 spriteRight.position.set(1, 1, 0);
-scene.add(spriteRight);
+
+const sprites = new THREE.Group();
+sprites.add(spriteLeft);
+sprites.add(spriteRight);
+scene.add(sprites);
+
+// raycast & mouse click listener
+const raycaster = new THREE.Raycaster();
+renderer.domElement.addEventListener('click', (event) => {
+  // change origin to center of canvas, orient y_axis to top, normalize coordinates in [-1, 1]
+  const mouse = new THREE.Vector2();
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  // rotate cube on click on sprites
+  raycaster.setFromCamera(mouse, camera);
+  const intersect = raycaster.intersectObject(sprites, true);
+
+  if (intersect.length > 0) {
+    const spriteClicked = intersect[0].object;
+
+    if (spriteClicked.id === spriteLeft.id) {
+      cube.rotation.z += 0.2;
+    } else if (spriteClicked.id === spriteRight.id) {
+      cube.rotation.z -= 0.2;
+    }
+  }
+}, false);
 
 /*
 * Loop
