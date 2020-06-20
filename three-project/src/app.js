@@ -2,13 +2,14 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
+import Stats from 'stats.js';
 
 // import images
 import pathImageLeft from './images/mdi-light chevron-left.png';
 import pathImageRight from './images/mdi-light chevron-right.png';
 
 /*
-* GUI panel
+* GUI & stats panels
 * https://davidwalsh.name/dat-gui
 */
 // add parameters fields to panel
@@ -25,6 +26,11 @@ gui.add(params, 'y', -100, 100, 0.1);
 gui.add(params, 'z', -100, 100, 0.1);
 gui.add(params, 'visible');
 gui.addColor(params, 'color');
+
+// show fps on performance monitor panel
+const stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
 
 /*
 * Scene
@@ -61,14 +67,6 @@ const material = new THREE.MeshLambertMaterial({ color: 0x00aaff });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-// add points to scene
-const geometryPoints = new THREE.Geometry();
-const coords = [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]];
-geometryPoints.vertices = coords.map((coord) => new THREE.Vector3(coord[0], coord[1], coord[2]));
-const materialPoints = new THREE.PointsMaterial({ size: 0.2, color: 0xffffff });
-const meshPoints = new THREE.Points(geometryPoints, materialPoints);
-scene.add(meshPoints);
-
 // add arrow sprites to scene
 const textureSpriteLeft = new THREE.TextureLoader().load(pathImageLeft);
 const materialSpriteLeft = new THREE.SpriteMaterial({ map: textureSpriteLeft });
@@ -89,6 +87,8 @@ scene.add(spriteRight);
 const start = Date.now();
 
 function animate() {
+  stats.begin();
+
   // update box according to panels values
   cube.visible = params.visible;
   cube.position.set(params.x, params.y, params.z);
@@ -103,6 +103,8 @@ function animate() {
     cube.rotation.y += 0.01;
   }
   renderer.render(scene, camera);
+
+  stats.end();
 
   // called before next screen repaint
   window.requestAnimationFrame(animate);

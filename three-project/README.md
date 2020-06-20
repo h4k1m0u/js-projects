@@ -1,7 +1,7 @@
 # Usage
 - Run development server: `npm run start`
 - Deployment: `npm run build`
-- After deployment, an http server is needed to serve sprite images: `python3 -m http.server`
+- After deployment, and to access the dist/index.html file, an http server is needed to serve sprite images from the hard-drive: `python3 -m http.server`
 
 
 # Prerequisites
@@ -37,9 +37,9 @@ file-loader is needed to copy images automatically on build:
 npm install --save-dev file-loader
 ```
 
-### Three.js
+### Three.js and its performance monitor
 ```
-npm install three --save
+npm install three stats.js --save
 ```
 
 ### ESLint
