@@ -51,6 +51,14 @@ npx eslint --init
 npx eslint src/app.js
 ```
 
+### Documentation
+Run jsdoc to generate documentation on javascript source file:
+
+```bash
+npm install --save-dev jsdoc
+npx jsdoc src/app.js
+```
+
 
 # Tutorials
 - Short [tutorial][1] to get started with webpack.
