@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = {
   entry: './src/app.js',
@@ -21,6 +22,13 @@ module.exports = {
         ],
       },
     ],
+  },
+  resolve: {
+    // use aliases instead of relative import paths in js
+    alias: {
+      images: path.resolve(__dirname, 'src/images'),
+      dir: path.resolve(__dirname, 'src/dir'),
+    },
   },
   plugins: [
     // generate dist/index.html

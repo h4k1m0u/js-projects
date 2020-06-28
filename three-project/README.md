@@ -59,6 +59,30 @@ npm install --save-dev jsdoc
 npx jsdoc src/app.js
 ```
 
+### Vim
+- As mentioned in [YouCompleteMe README][ycm], it needs to be installed using (node is required):
+
+```bash
+./install.py --ts-completer
+```
+
+If it was already installed, you need to force it to use TSServer instead of Tern by deleting the following folder:
+
+```bash
+third_party/ycmd/third_party/tern_runtime/node_modules
+```
+
+- Add a [jsconfig.json][jsconfig] file similar to the one in this project at the root of your folder.
+
+- Finally, check that YouCompleteMe (YCM) is running correctly by looking at the logs whose paths are printed with:
+
+```bash
+:YcmDebugInfo
+```
+
+[ycm]: https://github.com/ycm-core/YouCompleteMe#javascript-and-typescript-semantic-completion
+[jsconfig]: https://code.visualstudio.com/docs/languages/jsconfig
+
 
 # Tutorials
 - Short [tutorial][1] to get started with webpack.

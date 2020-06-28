@@ -5,8 +5,9 @@ import * as dat from 'dat.gui';
 import Stats from 'stats.js';
 
 // import images
-import pathImageLeft from './images/mdi-light chevron-left.png';
-import pathImageRight from './images/mdi-light chevron-right.png';
+import pathImageLeft from 'images/left.png';
+import pathImageRight from 'images/right.png';
+import i from 'dir/file';
 
 /*
 * GUI & stats panels
@@ -33,13 +34,12 @@ stats.showPanel(0);
 document.body.appendChild(stats.dom);
 
 // main program
-let scene, camera, renderer;
+let scene;
+let camera;
+let renderer;
 let cube;
 let controls;
 const start = Date.now();
-
-init();
-animate();
 
 /**
  * Create scene, camera, renderer, and add objects to scene.
@@ -56,46 +56,46 @@ function init() {
   renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-  
+
   // scene navigation with pan/zoom/rotate
   controls = new OrbitControls(camera, renderer.domElement);
   camera.position.z = 5;
   controls.update();
-  
+
   // lightbulb
   const light = new THREE.PointLight();
   light.position.set(-5, 5, 0);
   scene.add(light);
-  
+
   /*
   * Objects
   */
   // add axes & grid to scene
   scene.add(new THREE.AxesHelper(5));
   scene.add(new THREE.GridHelper(20, 20));
-  
+
   // add cube to scene
   const geometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.MeshLambertMaterial({ color: 0x00aaff });
   cube = new THREE.Mesh(geometry, material);
   scene.add(cube);
-  
+
   // arrow sprites
   const textureSpriteLeft = new THREE.TextureLoader().load(pathImageLeft);
   const materialSpriteLeft = new THREE.SpriteMaterial({ map: textureSpriteLeft });
   const spriteLeft = new THREE.Sprite(materialSpriteLeft);
   spriteLeft.position.set(-1, 1, 0);
-  
+
   const textureSpriteRight = new THREE.TextureLoader().load(pathImageRight);
   const materialSpriteRight = new THREE.SpriteMaterial({ map: textureSpriteRight });
   const spriteRight = new THREE.Sprite(materialSpriteRight);
   spriteRight.position.set(1, 1, 0);
-  
+
   const sprites = new THREE.Group();
   sprites.add(spriteLeft);
   sprites.add(spriteRight);
   scene.add(sprites);
-  
+
   // raycast & mouse click listener
   const raycaster = new THREE.Raycaster();
   renderer.domElement.addEventListener('click', (event) => {
@@ -103,14 +103,14 @@ function init() {
     const mouse = new THREE.Vector2();
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  
+
     // rotate cube on click on sprites
     raycaster.setFromCamera(mouse, camera);
     const intersect = raycaster.intersectObject(sprites, true);
-  
+
     if (intersect.length > 0) {
       const spriteClicked = intersect[0].object;
-  
+
       if (spriteClicked.id === spriteLeft.id) {
         cube.rotation.z += 0.2;
       } else if (spriteClicked.id === spriteRight.id) {
@@ -147,3 +147,6 @@ function animate() {
   // called before next screen repaint
   window.requestAnimationFrame(animate);
 }
+
+init();
+animate();

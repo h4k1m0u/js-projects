@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "checkJs": true,
+    "baseUrl": "./src",
+    "paths": {
+      "dir/*": ["./dir/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "out"]
+}

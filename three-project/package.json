@@ -2,7 +2,7 @@
     "name": "three-projects",
     "version": "1.0.0",
     "description": "```bash npm init -y npm install webpack --save-dev npm install three --save ```",
-    "main": "index.js",
+    "main": "src/app.js",
     "scripts": {
         "start": "webpack-dev-server --open",
         "build": "webpack --mode=production"
