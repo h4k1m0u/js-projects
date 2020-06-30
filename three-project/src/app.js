@@ -7,7 +7,7 @@ import Stats from 'stats.js';
 // import images
 import pathImageLeft from 'images/left.png';
 import pathImageRight from 'images/right.png';
-import i from 'dir/file';
+import * as meshes from 'modules/meshes';
 
 /*
 * GUI & stats panels
@@ -95,6 +95,10 @@ function init() {
   sprites.add(spriteLeft);
   sprites.add(spriteRight);
   scene.add(sprites);
+
+  // skybox cube with textures
+  const skybox = meshes.skybox();
+  scene.add(skybox);
 
   // raycast & mouse click listener
   const raycaster = new THREE.Raycaster();

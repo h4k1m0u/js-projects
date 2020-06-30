@@ -11,7 +11,7 @@ module.exports = {
     rules: [
       {
         // copies images imported in js to dist/images
-        test: /\.png$/,
+        test: /\.png|\.jpg$/,
         use: [
           {
             loader: 'file-loader',
@@ -27,7 +27,7 @@ module.exports = {
     // use aliases instead of relative import paths in js
     alias: {
       images: path.resolve(__dirname, 'src/images'),
-      dir: path.resolve(__dirname, 'src/dir'),
+      modules: path.resolve(__dirname, 'src/modules'),
     },
   },
   plugins: [
