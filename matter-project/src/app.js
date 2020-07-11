@@ -11,8 +11,8 @@ const render = Render.create({
 });
 
 // add two boxes and a ground to world
-const box1 = Bodies.rectangle(400, 200, 80, 80);
-const box2 = Bodies.rectangle(450, 50, 80, 80);
+const box1 = Bodies.rectangle(300, 100, 100, 20);
+const box2 = Bodies.rectangle(300, 100, 80, 80);
 const ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
 World.add(engine.world, [box1, box2, ground]);
 

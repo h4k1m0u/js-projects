@@ -8,30 +8,34 @@ const sass = require('gulp-sass');
 const ejs = require('gulp-ejs');
 const rename = require('gulp-rename');
 const del = require('del');
-const minify = require('gulp-minify');
 const sync = require('browser-sync').create();
+const { exec } = require('child_process');
 
 function clean() {
   return del('dist');
 }
 
 function generateHTML() {
+  // convert ejs templates to html using streams
   return src('src/views/main.ejs')
     .pipe(ejs({ title: 'My page title' }))
     .pipe(rename({ basename: 'index', extname: '.html' }))
-    .pipe(dest('dist'));
+    .pipe(dest('dist'))
+    .on('end', sync.reload);
 }
 
 function generateCSS() {
+  // convert sass to css using streams
   return src('src/scss/style.scss')
     .pipe(sass())
-    .pipe(dest('dist'));
+    .pipe(dest('dist'))
+    .on('end', sync.reload);
 }
 
 function generateJS() {
-  return src('src/*.js')
-    .pipe(minify())
-    .pipe(dest('dist'));
+  // bundle main js file & its imports using child process
+  return exec('npx rollup -c')
+    .on('exit', sync.reload);
 }
 
 function watchFiles() {
@@ -42,12 +46,9 @@ function watchFiles() {
     },
   });
 
-  watch('src/views/*.ejs', { ignoreInitial: false }, generateHTML)
-    .on('change', sync.reload);
-  watch('src/scss/*.scss', { ignoreInitial: false }, generateCSS)
-    .on('change', sync.reload);
-  watch('src/*.js', { ignoreInitial: false }, generateJS)
-    .on('change', sync.reload);
+  watch('src/views/*.ejs', { ignoreInitial: true }, generateHTML);
+  watch('src/scss/*.scss', { ignoreInitial: true }, generateCSS);
+  watch('src/*.js', { ignoreInitial: true }, generateJS);
 }
 
 module.exports = {
