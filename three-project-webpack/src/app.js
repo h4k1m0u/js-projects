@@ -3,13 +3,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 import Stats from 'stats.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import skybox from './modules/meshes';
 
-// images & 3d model paths
-const pathImageLeft = 'assets/images/left.png';
-const pathImageRight = 'assets/images/right.png';
-const pathModelBench = 'assets/models/bench/scene.gltf';
+// import images
+import pathImageLeft from 'assets/images/left.png';
+import pathImageRight from 'assets/images/right.png';
+import * as meshes from 'modules/meshes';
 
 /*
 * GUI & stats panels
@@ -99,8 +97,8 @@ function init() {
   scene.add(sprites);
 
   // skybox cube with textures
-  const sb = skybox();
-  scene.add(sb);
+  const skybox = meshes.skybox();
+  scene.add(skybox);
 
   // raycast & mouse click listener
   const raycaster = new THREE.Raycaster();
@@ -124,13 +122,6 @@ function init() {
       }
     }
   }, false);
-
-  // load 3d model
-  const loader = new GLTFLoader();
-  loader.load(pathModelBench,
-    (gltf) => {
-      scene.add(gltf.scene);
-    });
 }
 
 /**
