@@ -1,23 +1,12 @@
-# Prerequisites
-### Production
+# Installation
 ```bash
-npm install --save p5
+npm install
 ```
 
-### Development
-Webpack and its tools:
-
+# Building
 ```bash
-npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin
+gulp build
 ```
-
-Initialize javascript linter (vim's ale plugin will automatically detect it afterwards):
-
-```bash
-npm install eslint --save-dev
-npx eslint --init
-```
-
 
 # p5.js
 The instantiation of p5 inside a scope works using closures (inner functions) similary to the example below. Note that modification of objects (i.e. this) elements inside a function persist outside the function:
