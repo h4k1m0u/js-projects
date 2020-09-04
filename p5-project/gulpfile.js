@@ -18,7 +18,7 @@ function clean() {
 function generateHTML() {
   // convert ejs templates to html using streams
   return src('src/views/main.ejs')
-    .pipe(ejs({ title: 'My page title' }))
+    .pipe(ejs({ title: 'Game made with p5js' }))
     .pipe(rename({ basename: 'index', extname: '.html' }))
     .pipe(dest('dist'))
     .on('end', sync.reload);
@@ -38,6 +38,12 @@ function generateJS() {
     .on('exit', sync.reload);
 }
 
+function copyImages() {
+  // copy images folder to dist
+  return src('src/images/*')
+    .pipe(dest('dist/images'));
+}
+
 function watchFiles() {
   sync.init({
     server: {
@@ -52,6 +58,6 @@ function watchFiles() {
 }
 
 module.exports = {
-  default: watchFiles,
-  build: series(clean, generateHTML, generateCSS, generateJS),
+  watch: watchFiles,
+  build: series(clean, generateHTML, generateCSS, generateJS, copyImages),
 };
