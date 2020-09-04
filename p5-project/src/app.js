@@ -1,31 +1,13 @@
 import p5 from 'p5';
+import {
+  canvas, circle, apple, fps,
+} from './constants';
 
 // p5 in instance mode (namespacing) using closures
 const sketch = (p) => {
-  // constants
-  const canvas = {
-    width: 640,
-    height: 480,
-  };
-
-  const circle = {
-    diameter: 24,
-    color: '#f00',
-    x: canvas.width / 2,
-    y: canvas.height / 2,
-    step: 10,
-  };
-
-  const apple = {
-    path: 'images/apple.png',
-    x: 0,
-    y: 0,
-  };
-
-  const fps = 60;
-
-  // image sprites
-  let imageApple;
+  let imageApple = null;
+  let isColliding = false;
+  let score = 0;
 
   p.setup = () => {
     // init canvas
@@ -45,10 +27,12 @@ const sketch = (p) => {
     p.fill(circle.color);
     p.circle(circle.x, circle.y, circle.diameter);
 
-    // move sprite to location every 2 seconds
+    // move sprite to new location & reset check for collision
     if (p.frameCount % (2 * fps) === 0) {
       apple.x = p.random(canvas.width);
       apple.y = p.random(canvas.height);
+
+      isColliding = false;
     }
     p.image(imageApple, apple.x, apple.y);
 
@@ -60,37 +44,32 @@ const sketch = (p) => {
     }
 
     // move circle using keyboard arrows
-    if (p.keyIsDown(p.LEFT_ARROW)) {
+    if (p.keyIsDown(p.LEFT_ARROW) && circle.x > circle.radius) {
       circle.x -= circle.step;
-    } else if (p.keyIsDown(p.RIGHT_ARROW)) {
+    } else if (p.keyIsDown(p.RIGHT_ARROW) && circle.x < canvas.width - circle.radius) {
       circle.x += circle.step;
-    } else if (p.keyIsDown(p.UP_ARROW)) {
+    } else if (p.keyIsDown(p.UP_ARROW) && circle.y > circle.radius) {
       circle.y -= circle.step;
-    } else if (p.keyIsDown(p.DOWN_ARROW)) {
+    } else if (p.keyIsDown(p.DOWN_ARROW) && circle.y < canvas.height - circle.radius) {
       circle.y += circle.step;
+    }
+
+    // check for collision only once between PC & NPC
+    const coordCircle = p.createVector(circle.x, circle.y);
+    const coordApple = p.createVector(apple.centerX, apple.centerY);
+    const distance = coordCircle.dist(coordApple);
+    if (!isColliding && distance < 2 * circle.radius) {
+      isColliding = true;
+      score += 1;
+      console.log('Score:', score);
     }
   };
 
   p.keyPressed = () => {
-    // move circle using keyboard arrows
-    /*
-    switch (p.keyCode) {
-      case p.LEFT_ARROW:
-        circle.x -= circle.step;
-        break;
-      case p.RIGHT_ARROW:
-        circle.x += circle.step;
-        break;
-      case p.UP_ARROW:
-        circle.y -= circle.step;
-        break;
-      case p.DOWN_ARROW:
-        circle.y += circle.step;
-        break;
-      default:
-        break;
+    // show final score
+    if (p.key === 'q' || p.keyCode === p.ESCAPE) {
+      console.log('Final Score:', score);
     }
-    */
   };
 };
 

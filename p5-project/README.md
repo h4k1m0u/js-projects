@@ -42,3 +42,8 @@ class MyClass {
 const myObj = new MyClass(outer);
 myObj.draw();
 ```
+
+# Tutorials
+[The Coding Train]: the best channel on youtube with tutorials for p5.js
+
+[The Coding Train]: https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw
