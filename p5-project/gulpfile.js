@@ -44,6 +44,12 @@ function copyImages() {
     .pipe(dest('dist/images'));
 }
 
+function copySounds() {
+  // copy sounds folder to dist
+  return src('src/sounds/*')
+    .pipe(dest('dist/sounds'));
+}
+
 function watchFiles() {
   sync.init({
     server: {
@@ -59,5 +65,5 @@ function watchFiles() {
 
 module.exports = {
   watch: watchFiles,
-  build: series(clean, generateHTML, generateCSS, generateJS, copyImages),
+  build: series(clean, generateHTML, generateCSS, generateJS, copyImages, copySounds),
 };

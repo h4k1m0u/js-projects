@@ -17,10 +17,12 @@ gulp watch
 ```
 
 # Assets
-- [Good Fruits] by [Master484], license: Public Domain.
+- **Apple sprite:** [Good Fruits] by [Master484], license: Public Domain.
+- **Music:** [Cyberpunk Moonlight Sonata] by Joth.
 
 [Good Fruits]: https://opengameart.org/content/good-fruits-m484-games
 [Master484]: https://m484games.ucoz.com/
+[Cyberpunk Moonlight Sonata]: https://opengameart.org/content/cyberpunk-moonlight-sonata
 
 # p5.js
 The instantiation of p5 inside a scope works using closures (inner functions) similary to the example below. Note that modification of objects (i.e. this) elements inside a function persist outside the function:
