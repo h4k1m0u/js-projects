@@ -60,7 +60,7 @@ function watchFiles() {
 
   watch('src/views/*.ejs', { ignoreInitial: true }, generateHTML);
   watch('src/scss/*.scss', { ignoreInitial: true }, generateCSS);
-  watch('src/*.js', { ignoreInitial: true }, generateJS);
+  watch('src/**/*.js', { ignoreInitial: true }, generateJS);
 }
 
 module.exports = {

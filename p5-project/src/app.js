@@ -1,21 +1,22 @@
 import p5 from 'p5';
 import 'p5/lib/addons/p5.sound';
-import Circle from './characters/circle';
+import Snake from './characters/snake';
 import Apple from './characters/apple';
 
 // p5 in instance mode (namespacing) using closures
 const sketch = (p) => {
   let score = 0;
-  const fps = 60;
+  const fps = 5;
   let timer = 0;
 
   const canvas = {
-    width: 640,
+    width: 480,
     height: 480,
+    cell: 24,
   };
 
   let apple = null;
-  let circle = null;
+  let snake = null;
   let elementScore = null;
 
   // assets
@@ -37,8 +38,9 @@ const sketch = (p) => {
     p.frameRate(fps);
 
     // characters instances
-    apple = new Apple('images/apple.png', 0, 0);
-    circle = new Circle(24, canvas.width / 2, canvas.height / 2);
+    snake = new Snake(canvas, 24);
+    apple = new Apple(canvas, 'images/apple.png');
+    apple.move(p);
 
     // score html element
     elementScore = p.createDiv('Score = 0');
@@ -51,56 +53,57 @@ const sketch = (p) => {
   p.draw = () => {
     timer += 1;
 
-    // clear & re-draw red rectange
+    // clear & re-draw moving PC
     p.background(127);
-    p.fill(circle.color);
-    p.circle(circle.x, circle.y, circle.diameter);
+    p.fill(snake.color);
+    p.rect(snake.x, snake.y, snake.size, snake.size);
+    snake.move(p);
 
     // move sprite to new location & reset check for collision
-    if (timer === (2 * fps)) {
-      apple.x = p.random(canvas.width);
-      apple.y = p.random(canvas.height);
+    if (timer === (10 * fps)) {
+      apple.move(p);
       timer = 0;
     }
     p.image(imageApple, apple.x, apple.y);
 
-    // change circle color on mouse press
+    // change snake color on mouse press
     if (p.mouseIsPressed) {
-      circle.color = '#00f';
+      snake.color = '#00f';
     } else {
-      circle.color = '#f00';
+      snake.color = '#fff';
     }
 
-    // move circle using keyboard arrows
-    if (p.keyIsDown(p.LEFT_ARROW) && circle.x > circle.radius) {
-      circle.x -= circle.speed;
-    } else if (p.keyIsDown(p.RIGHT_ARROW) && circle.x < canvas.width - circle.radius) {
-      circle.x += circle.speed;
-    } else if (p.keyIsDown(p.UP_ARROW) && circle.y > circle.radius) {
-      circle.y -= circle.speed;
-    } else if (p.keyIsDown(p.DOWN_ARROW) && circle.y < canvas.height - circle.radius) {
-      circle.y += circle.speed;
-    }
-
-    // check for collision only once between PC & NPC
-    const coordCircle = p.createVector(circle.x, circle.y);
-    const coordApple = p.createVector(apple.centerX, apple.centerY);
-    const distance = coordCircle.dist(coordApple);
-    if (distance < 2 * circle.radius) {
+    // check for collision between PC & NPC
+    if (snake.intersects(apple)) {
       score += 1;
       elementScore.html(`Score: ${score}`);
 
       // move apple to random position on collision
-      apple.x = p.random(canvas.width);
-      apple.y = p.random(canvas.height);
+      apple.move(p);
       timer = 0;
     }
   };
 
   p.keyPressed = () => {
-    // show final score
-    if (p.key === 'q' || p.keyCode === p.ESCAPE) {
-      elementScore.html(`Final score: ${score}`);
+    // move snake using keyboard arrows
+    switch (p.keyCode) {
+      case p.LEFT_ARROW:
+        snake.turnLeft(p);
+        break;
+      case p.RIGHT_ARROW:
+        snake.turnRight(p);
+        break;
+      case p.UP_ARROW:
+        snake.turnUp(p);
+        break;
+      case p.DOWN_ARROW:
+        snake.turnDown(p);
+        break;
+      case p.ESCAPE:
+        elementScore.html(`Final score: ${score}`);
+        break;
+      default:
+        break;
     }
   };
 };
