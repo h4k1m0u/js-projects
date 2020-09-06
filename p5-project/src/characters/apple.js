@@ -1,5 +1,6 @@
 class Apple {
-  constructor(canvas, path) {
+  constructor(p, canvas, path) {
+    this.p = p;
     this.canvas = canvas;
     this.path = path;
     this.size = 24;
@@ -17,10 +18,10 @@ class Apple {
     return this.y + this.radius;
   }
 
-  move(p) {
+  move() {
     // align image top-left corner on the grid
-    this.x = this.canvas.cell * p.int(p.random(this.canvas.width / this.canvas.cell));
-    this.y = this.canvas.cell * p.int(p.random(this.canvas.height / this.canvas.cell));
+    this.x = this.canvas.cell * this.p.int(this.p.random(this.canvas.width / this.canvas.cell));
+    this.y = this.canvas.cell * this.p.int(this.p.random(this.canvas.height / this.canvas.cell));
   }
 }
 

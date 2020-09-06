@@ -6,7 +6,7 @@ import Apple from './characters/apple';
 // p5 in instance mode (namespacing) using closures
 const sketch = (p) => {
   let score = 0;
-  const fps = 5;
+  const fps = 30;
   let timer = 0;
 
   const canvas = {
@@ -38,9 +38,9 @@ const sketch = (p) => {
     p.frameRate(fps);
 
     // characters instances
-    snake = new Snake(canvas, 24);
-    apple = new Apple(canvas, 'images/apple.png');
-    apple.move(p);
+    snake = new Snake(p, canvas, 24);
+    apple = new Apple(p, canvas, 'images/apple.png');
+    apple.move();
 
     // score html element
     elementScore = p.createDiv('Score = 0');
@@ -55,13 +55,16 @@ const sketch = (p) => {
 
     // clear & re-draw moving PC
     p.background(127);
-    p.fill(snake.color);
-    p.rect(snake.x, snake.y, snake.size, snake.size);
-    snake.move(p);
+    snake.draw();
 
-    // move sprite to new location & reset check for collision
-    if (timer === (10 * fps)) {
-      apple.move(p);
+    // movement of snake with retro vibe (limit speed)
+    if (p.frameCount % 5 === 0) {
+      snake.move();
+    }
+
+    // move apple to new location every 5s & reset check for collision
+    if (timer === (5 * fps)) {
+      apple.move();
       timer = 0;
     }
     p.image(imageApple, apple.x, apple.y);
@@ -79,7 +82,7 @@ const sketch = (p) => {
       elementScore.html(`Score: ${score}`);
 
       // move apple to random position on collision
-      apple.move(p);
+      apple.move();
       timer = 0;
     }
   };
