@@ -8,9 +8,10 @@ class Snake {
     this.xspeed = 1;
     this.yspeed = 0;
 
-    // head: last element of snake
     this.coords = [];
     this.coords[0] = p.createVector(canvas.width / 2, canvas.height / 2);
+
+    this.isDead = false;
   }
 
   get head() {
@@ -35,26 +36,48 @@ class Snake {
     }
 
     // prevent snake from moving out of canvas
-    this.head.x = this.p.constrain(this.head.x + this.xspeed * this.canvas.cell,
-      0, this.canvas.width - this.cellSize);
-    this.head.y = this.p.constrain(this.head.y + this.yspeed * this.canvas.cell,
-      0, this.canvas.height - this.cellSize);
+    this.head.x += this.xspeed * this.canvas.cell;
+    this.head.y += this.yspeed * this.canvas.cell;
+
+    // snake dies when wall is hit
+    if (this.isHittingWall()) {
+      this.isDead = true;
+    }
+  }
+
+  isHittingWall() {
+    let isColliding = false;
+
+    if (this.head.x === -this.cellSize || this.head.x === this.canvas.width
+        || this.head.y === -this.cellSize || this.head.y === this.canvas.height) {
+      isColliding = true;
+    }
+
+    return isColliding;
   }
 
   turnLeft() {
-    [this.xspeed, this.yspeed] = [-1, 0];
+    if (this.xspeed !== 1) {
+      [this.xspeed, this.yspeed] = [-1, 0];
+    }
   }
 
   turnRight() {
-    [this.xspeed, this.yspeed] = [1, 0];
+    if (this.xspeed !== -1) {
+      [this.xspeed, this.yspeed] = [1, 0];
+    }
   }
 
   turnUp() {
-    [this.xspeed, this.yspeed] = [0, -1];
+    if (this.yspeed !== 1) {
+      [this.xspeed, this.yspeed] = [0, -1];
+    }
   }
 
   turnDown() {
-    [this.xspeed, this.yspeed] = [0, 1];
+    if (this.yspeed !== -1) {
+      [this.xspeed, this.yspeed] = [0, 1];
+    }
   }
 
   eat(apple) {
@@ -65,13 +88,8 @@ class Snake {
   intersects(apple) {
     let isColliding = false;
 
-    // checks for collision between two rectangles
-    // https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-    if (this.head.x < apple.x + apple.size
-        && this.head.x + this.cellSize > apple.x
-        && this.head.y < apple.y + apple.size
-        && this.head.y + this.cellSize > apple.y
-    ) {
+    // checks for collision between snake head & apple
+    if (this.head.x === apple.x && this.head.y === apple.y) {
       this.eat(apple);
       isColliding = true;
     }

@@ -1,8 +1,8 @@
 class Apple {
-  constructor(p, canvas, path) {
+  constructor(p, canvas, image) {
     this.p = p;
     this.canvas = canvas;
-    this.path = path;
+    this.image = image;
     this.size = 24;
   }
 
@@ -16,6 +16,11 @@ class Apple {
 
   get centerY() {
     return this.y + this.radius;
+  }
+
+  draw() {
+    // draw apple using p5 image
+    this.p.image(this.image, this.x, this.y);
   }
 
   move() {
