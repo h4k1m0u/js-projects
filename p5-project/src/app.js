@@ -8,6 +8,7 @@ const sketch = (p) => {
   let score = 0;
   const fps = 30;
   let timer = 0;
+  let isPaused = false;
 
   const canvas = {
     width: 480,
@@ -40,17 +41,20 @@ const sketch = (p) => {
     // characters instances
     snake = new Snake(p, canvas, 24);
     apple = new Apple(p, canvas, imageApple);
-    apple.move();
+    apple.move(snake);
 
-    // score html element
+    // score html element below canvas
     elementScore = p.createDiv('Score = 0');
-    elementScore.position(20, 20);
 
     // play background music
     music.loop();
   };
 
   p.draw = () => {
+    if (isPaused) {
+      return;
+    }
+
     timer += 1;
 
     // movement of snake with retro vibe (limit speed)
@@ -64,7 +68,7 @@ const sketch = (p) => {
 
       // move apple to new location every 5s & reset check for collision
       if (timer === (5 * fps)) {
-        apple.move();
+        apple.move(snake);
         timer = 0;
       }
 
@@ -85,7 +89,7 @@ const sketch = (p) => {
         elementScore.html(`Score: ${score}`);
 
         // move apple to random position on collision
-        apple.move();
+        apple.move(snake);
         timer = 0;
       }
     } else {
@@ -110,7 +114,11 @@ const sketch = (p) => {
         snake.turnDown(p);
         break;
       case p.ESCAPE:
+        snake.isDead = true;
         elementScore.html(`Final score: ${score}`);
+        break;
+      case p.ENTER:
+        isPaused = !isPaused;
         break;
       default:
         break;
