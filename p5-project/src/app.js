@@ -44,7 +44,7 @@ const sketch = (p) => {
     apple.move(snake);
 
     // score html element below canvas
-    elementScore = p.createDiv('Score = 0');
+    elementScore = p.createDiv('<b>Score:</b> 0');
 
     // play background music
     music.loop();
@@ -64,7 +64,7 @@ const sketch = (p) => {
 
     if (!snake.isDead) {
       // clear canvas
-      p.background(127);
+      p.background('#71a9d0');
 
       // move apple to new location every 5s & reset check for collision
       if (timer === (5 * fps)) {
@@ -86,7 +86,7 @@ const sketch = (p) => {
       // check for collision between PC & NPC
       if (snake.intersects(apple)) {
         score += 1;
-        elementScore.html(`Score: ${score}`);
+        elementScore.html(`<b>Score:</b> ${score}`);
 
         // move apple to random position on collision
         apple.move(snake);
@@ -94,7 +94,7 @@ const sketch = (p) => {
       }
     } else {
       // snake died from hitting the wall
-      elementScore.html(`Final score: ${score}`);
+      elementScore.html(`<b>Final score:</b> ${score}`);
     }
   };
 
@@ -115,7 +115,7 @@ const sketch = (p) => {
         break;
       case p.ESCAPE:
         snake.isDead = true;
-        elementScore.html(`Final score: ${score}`);
+        elementScore.html(`<b>Final score:</b> ${score}`);
         break;
       case p.ENTER:
         isPaused = !isPaused;

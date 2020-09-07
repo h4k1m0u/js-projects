@@ -1,3 +1,10 @@
+# Snake
+Classic snake game implemented with [p5.js].
+
+![Screenshot](./screenshots/snake.png)
+
+[p5.js]: https://p5js.org
+
 # Installation
 ```bash
 npm install
