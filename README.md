@@ -1,5 +1,5 @@
 # Snake
-Classic snake game implemented with [p5.js].
+Classic snake game implemented with [p5.js]
 
 ![Screenshot](./screenshots/snake.png)
 
@@ -22,6 +22,38 @@ For automatic browser reloading during development:
 ```bash
 gulp watch
 ```
+
+# Deployment on Github
+Following this [tutorial on medium], we create a new branch:
+
+```bash
+git checkout --orphan gh-pages
+rm -rf .
+git add .
+git commit --allow-empty -m "New branch"
+git push origin gh-pages
+```
+
+Create a worktree inside `dist/` folder and associate it with new branch. Then build project:
+
+```bash
+git worktree add dist gh-pages
+gulp build
+```
+
+Now whenever you go inside `dist/` folder, the branch changes automatically. So you just have to commit `dist/` folder:
+
+```bash
+cd dist
+git add .
+git commit -m "publish game on github"
+git push origin gh-pages
+```
+
+Follow this [link to the game].
+
+[tutorial on medium]: https://medium.com/linagora-engineering/deploying-your-js-app-to-github-pages-the-easy-way-or-not-1ef8c48424b7
+[link to the game]: https://h4k1m0u.github.io/p5-snake/
 
 # Assets
 - **Apple sprite:** [Good Fruits] by [Master484], license: Public Domain.
