@@ -53,7 +53,7 @@ git push origin gh-pages
 Follow this [link to the game].
 
 [tutorial on medium]: https://medium.com/linagora-engineering/deploying-your-js-app-to-github-pages-the-easy-way-or-not-1ef8c48424b7
-[link to the game]: https://h4k1m0u.github.io/p5-snake/
+[link to the game]: https://h4k1m0u.github.io/snake/
 
 # Assets
 - **Apple sprite:** [Good Fruits] by [Master484], license: Public Domain.

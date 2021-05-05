@@ -1,7 +1,10 @@
 import p5 from 'p5';
-import 'p5/lib/addons/p5.sound';
 import Snake from './characters/snake';
 import Apple from './characters/apple';
+
+// import style & images so webpack process them
+import pathApple from './images/apple.png';
+import './scss/style.scss';
 
 // p5 in instance mode (namespacing) using closures
 const sketch = (p) => {
@@ -21,13 +24,11 @@ const sketch = (p) => {
   let elementScore = null;
 
   // assets
-  let music = null;
   let imageApple = null;
 
   p.preload = () => {
-    // load music & image sprites
-    music = p.loadSound('sounds/cyberpunk-moonlight-sonata.mp3');
-    imageApple = p.loadImage('images/apple.png');
+    // load image sprites
+    imageApple = p.loadImage(pathApple);
   };
 
   p.setup = () => {
@@ -45,9 +46,6 @@ const sketch = (p) => {
 
     // score html element below canvas
     elementScore = p.createDiv('<b>Score:</b> 0');
-
-    // play background music
-    music.loop();
   };
 
   p.draw = () => {
