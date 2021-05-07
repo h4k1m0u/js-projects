@@ -1,4 +1,5 @@
 import p5 from 'p5';
+import { io } from 'socket.io-client';
 import Snake from './characters/snake';
 import Apple from './characters/apple';
 
@@ -46,6 +47,12 @@ const sketch = (p) => {
 
     // score html element below canvas
     elementScore = p.createDiv('<b>Score:</b> 0');
+
+    // connect to socket.io server
+    const socket = io('http://localhost:3000');
+    socket.on('connect', () => {
+      console.log('Client: connection!');
+    });
   };
 
   p.draw = () => {
