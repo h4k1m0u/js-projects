@@ -9,7 +9,7 @@ class Snake {
     this.yspeed = 0;
 
     this.coords = [];
-    this.coords[0] = p.createVector(canvas.width / 2, canvas.height / 2);
+    this.coords[0] = p.createVector(cellSize, canvas.height / 2);
 
     this.isDead = false;
   }
@@ -34,31 +34,30 @@ class Snake {
   }
 
   move() {
+    // snake dies when wall is hit
+    if (this.isHittingWall()) {
+      this.isDead = true;
+      return;
+    }
+
     // shift coords from smallest to largest index
     for (let i = 0; i < this.coords.length - 1; i += 1) {
       this.coords[i].x = this.coords[i + 1].x;
       this.coords[i].y = this.coords[i + 1].y;
     }
 
-    // prevent snake from moving out of canvas
+    // move snake's head by one tile cell
     this.head.x += this.xspeed * this.canvas.cell;
     this.head.y += this.yspeed * this.canvas.cell;
-
-    // snake dies when wall is hit
-    if (this.isHittingWall()) {
-      this.isDead = true;
-    }
   }
 
   isHittingWall() {
-    let isColliding = false;
-
-    if (this.head.x === -this.cellSize || this.head.x === this.canvas.width
-        || this.head.y === -this.cellSize || this.head.y === this.canvas.height) {
-      isColliding = true;
+    if (this.head.x === 0 || this.head.x === this.canvas.width - this.canvas.cell ||
+        this.head.y === 0 || this.head.y === this.canvas.height - this.canvas.cell) {
+      return true;
     }
 
-    return isColliding;
+    return false;
   }
 
   turnLeft() {

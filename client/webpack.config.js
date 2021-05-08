@@ -1,5 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path');
+const path = require('path'); // eslint-disable-line import/no-extraneous-dependencies
 
 module.exports = {
   entry: './src/index.js',
@@ -36,7 +36,8 @@ module.exports = {
     // use aliases instead of relative import paths in js
     alias: {
       modules: path.resolve(__dirname, 'src/modules'),
-      assets: path.resolve(__dirname, 'src/assets'),
+      images: path.resolve(__dirname, 'src/images'),
+      scss: path.resolve(__dirname, 'src/scss'),
     },
   },
   plugins: [

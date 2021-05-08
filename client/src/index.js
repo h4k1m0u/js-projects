@@ -1,16 +1,17 @@
 import p5 from 'p5';
 import { io } from 'socket.io-client';
-import Snake from './characters/snake';
-import Apple from './characters/apple';
+
+import Snake from 'modules/characters/snake';
+import Apple from 'modules/characters/apple';
+import constants from 'modules/constants';
 
 // import style & images so webpack process them
-import pathApple from './images/apple.png';
-import './scss/style.scss';
+import 'scss/style.scss';
+import pathApple from 'images/apple.png';
 
 // p5 in instance mode (namespacing) using closures
 const sketch = (p) => {
   let score = 0;
-  const fps = 30;
   let timer = 0;
   let isPaused = false;
 
@@ -23,6 +24,8 @@ const sketch = (p) => {
   let apple = null;
   let snake = null;
   let elementScore = null;
+
+  let socket = null;
 
   // assets
   let imageApple = null;
@@ -38,7 +41,7 @@ const sketch = (p) => {
     p.noStroke();
 
     // set fps
-    p.frameRate(fps);
+    p.frameRate(constants.FPS);
 
     // characters instances
     snake = new Snake(p, canvas, 24);
@@ -49,9 +52,15 @@ const sketch = (p) => {
     elementScore = p.createDiv('<b>Score:</b> 0');
 
     // connect to socket.io server
-    const socket = io('http://localhost:3000');
+    socket = io('http://localhost:3000');
     socket.on('connect', () => {
-      console.log('Client: connection!');
+      console.log('Client: connection');
+    });
+
+    // update snake speed (direction) when state received from server
+    socket.on('stateChange', (state) => {
+      snake.xspeed = state.snake.speed.x;
+      snake.yspeed = state.snake.speed.y;
     });
   };
 
@@ -72,7 +81,7 @@ const sketch = (p) => {
       p.background('#71a9d0');
 
       // move apple to new location every 5s & reset check for collision
-      if (timer === (5 * fps)) {
+      if (timer === (5 * constants.FPS)) {
         apple.move(snake);
         timer = 0;
       }
@@ -104,19 +113,13 @@ const sketch = (p) => {
   };
 
   p.keyPressed = () => {
-    // move snake using keyboard arrows (cannot change to opposite dir)
+    // notify server about key pressed
     switch (p.keyCode) {
       case p.LEFT_ARROW:
-        snake.turnLeft(p);
-        break;
       case p.RIGHT_ARROW:
-        snake.turnRight(p);
-        break;
       case p.UP_ARROW:
-        snake.turnUp(p);
-        break;
       case p.DOWN_ARROW:
-        snake.turnDown(p);
+        socket.emit('keyPress', p.keyCode);
         break;
       case p.ESCAPE:
         snake.isDead = true;
