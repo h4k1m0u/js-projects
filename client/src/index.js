@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 
 import Snake from 'modules/characters/snake';
 import Apple from 'modules/characters/apple';
-import constants from 'modules/constants';
+import { FPS } from 'modules/constants';
 
 // import style & images so webpack process them
 import 'scss/style.scss';
@@ -41,12 +41,12 @@ const sketch = (p) => {
     p.noStroke();
 
     // set fps
-    p.frameRate(constants.FPS);
+    p.frameRate(FPS);
 
     // characters instances
-    snake = new Snake(p, canvas, 24);
-    apple = new Apple(p, canvas, imageApple);
-    apple.move(snake);
+    snake = new Snake(p);
+    apple = new Apple(p, imageApple);
+    // apple.move(snake);
 
     // score html element below canvas
     elementScore = p.createDiv('<b>Score:</b> 0');
@@ -54,17 +54,18 @@ const sketch = (p) => {
     // connect to socket.io server
     socket = io('http://localhost:3000');
     socket.on('connect', () => {
-      console.log('Client: connection');
+      console.log(`Connection with id: ${socket.id}`);
     });
 
     // update snake speed (direction) when state received from server
     socket.on('stateChange', (state) => {
-      snake.xspeed = state.snake.speed.x;
-      snake.yspeed = state.snake.speed.y;
+      snake.speed = state.snake.speed;
+      snake.coords = state.snake.coords;
     });
   };
 
   p.draw = () => {
+    console.log('snake.coords ', snake.coords);
     if (isPaused) {
       return;
     }
@@ -73,43 +74,51 @@ const sketch = (p) => {
 
     // movement of snake with retro vibe (limit speed)
     if (p.frameCount % 5 === 0) {
-      snake.move();
+      // snake.move();
     }
 
+    /*
     if (!snake.isDead) {
-      // clear canvas
-      p.background('#71a9d0');
+    */
 
-      // move apple to new location every 5s & reset check for collision
-      if (timer === (5 * constants.FPS)) {
-        apple.move(snake);
-        timer = 0;
-      }
+    // clear canvas
+    p.background('#71a9d0');
 
-      // draw sprites
-      snake.draw();
-      apple.draw();
+    // move apple to new location every 5s & reset check for collision
+    if (timer === (5 * FPS)) {
+      // apple.move(snake);
+      timer = 0;
+    }
 
-      // change snake color on mouse press
-      if (p.mouseIsPressed) {
-        snake.color = '#00f';
-      } else {
-        snake.color = '#fff';
-      }
+    // draw sprites
+    snake.draw();
+    apple.draw();
 
-      // check for collision between PC & NPC
-      if (snake.intersects(apple)) {
-        score += 1;
-        elementScore.html(`<b>Score:</b> ${score}`);
+    // change snake color on mouse press
+    if (p.mouseIsPressed) {
+      snake.color = '#00f';
+    } else {
+      snake.color = '#fff';
+    }
 
-        // move apple to random position on collision
-        apple.move(snake);
-        timer = 0;
-      }
+    /*
+    // check for collision between PC & NPC
+    if (snake.intersects(apple)) {
+      score += 1;
+      elementScore.html(`<b>Score:</b> ${score}`);
+
+      // move apple to random position on collision
+      apple.move(snake);
+      timer = 0;
+    }
+    */
+
+    /*
     } else {
       // snake died from hitting the wall
       elementScore.html(`<b>Final score:</b> ${score}`);
     }
+    */
   };
 
   p.keyPressed = () => {
