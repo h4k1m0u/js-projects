@@ -31,8 +31,8 @@ class Snake {
   }
 
   isHittingWall() {
-    if (this.head.x === 0 || this.head.x === canvas.width - canvas.cell ||
-        this.head.y === 0 || this.head.y === canvas.height - canvas.cell) {
+    if (this.head.x === -canvas.cell || this.head.x === canvas.width ||
+        this.head.y === -canvas.cell || this.head.y === canvas.height) {
       return true;
     }
 
@@ -42,21 +42,19 @@ class Snake {
   eat(apple) {
     // add new rectangle to snake
     this.coords.push({
-      x: apple.x,
-      y: apple.y,
+      x: apple.coord.x,
+      y: apple.coord.y,
     });
   }
 
   intersects(apple) {
-    let isColliding = false;
-
     // checks for collision between snake head & apple
-    if (this.head.x === apple.x && this.head.y === apple.y) {
+    if (this.head.x === apple.coord.x && this.head.y === apple.coord.y) {
       this.eat(apple);
-      isColliding = true;
+      return true;
     }
 
-    return isColliding;
+    return false;
   }
 }
 

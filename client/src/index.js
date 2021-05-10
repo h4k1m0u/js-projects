@@ -12,7 +12,6 @@ import pathApple from 'images/apple.png';
 // p5 in instance mode (namespacing) using closures
 const sketch = (p) => {
   let score = 0;
-  let timer = 0;
   let isPaused = false;
 
   const canvas = {
@@ -57,68 +56,29 @@ const sketch = (p) => {
       console.log(`Connection with id: ${socket.id}`);
     });
 
-    // update snake speed (direction) when state received from server
+    // update state for snake/apple/score from server
     socket.on('stateChange', (state) => {
       snake.speed = state.snake.speed;
       snake.coords = state.snake.coords;
+      apple.coord = state.apple.coord;
+      score = state.score;
     });
   };
 
   p.draw = () => {
-    console.log('snake.coords ', snake.coords);
     if (isPaused) {
       return;
     }
 
-    timer += 1;
-
-    // movement of snake with retro vibe (limit speed)
-    if (p.frameCount % 5 === 0) {
-      // snake.move();
-    }
-
-    /*
-    if (!snake.isDead) {
-    */
-
     // clear canvas
     p.background('#71a9d0');
-
-    // move apple to new location every 5s & reset check for collision
-    if (timer === (5 * FPS)) {
-      // apple.move(snake);
-      timer = 0;
-    }
 
     // draw sprites
     snake.draw();
     apple.draw();
 
-    // change snake color on mouse press
-    if (p.mouseIsPressed) {
-      snake.color = '#00f';
-    } else {
-      snake.color = '#fff';
-    }
-
-    /*
-    // check for collision between PC & NPC
-    if (snake.intersects(apple)) {
-      score += 1;
-      elementScore.html(`<b>Score:</b> ${score}`);
-
-      // move apple to random position on collision
-      apple.move(snake);
-      timer = 0;
-    }
-    */
-
-    /*
-    } else {
-      // snake died from hitting the wall
-      elementScore.html(`<b>Final score:</b> ${score}`);
-    }
-    */
+    // show score
+    elementScore.html(`<b>Score:</b> ${score}`);
   };
 
   p.keyPressed = () => {

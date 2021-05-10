@@ -4,6 +4,7 @@ const { Server } = require('socket.io');
 const stateInitial = require('./modules/state');
 const { keys, fps } = require('./modules/constants');
 const Snake = require('./modules/characters/snake');
+const Apple = require('./modules/characters/apple');
 
 // bind socketio server to http server (allow socketio.client address)
 const httpServer = http.createServer();
@@ -25,6 +26,7 @@ socketServer.on('connect', (socket) => {
   // initialize state with a deep copy (json needed bcos of nested objects)
   const state = JSON.parse(JSON.stringify(stateInitial));
   const snake = new Snake(state.snake);
+  const apple = new Apple(state.apple);
 
   // receive keycode from client
   socket.on('keyPress', (keyCode) => {
@@ -53,11 +55,19 @@ socketServer.on('connect', (socket) => {
 
   // notify client about new state (snake speed) every frame
   setInterval(() => {
-    // send updated state after snake's movement
+    // move snake & position apple
     snake.move();
-    state.snake.coords = snake.coords;
-    state.snake.speed = snake.speed;
-    console.log(state.snake.coords);
+    apple.move(snake);
+
+    // check for collision between snake & apple
+    if (snake.intersects(apple)) {
+      state.score += 1;
+      apple.needsSpawn = true;
+    }
+
+    // send updated state (position/speed) for snake & apple to client
+    [state.snake.coords, state.snake.speed] = [snake.coords, snake.speed];
+    state.apple.coord = apple.coord;
 
     socket.emit('stateChange', state);
   }, 1000 / fps);

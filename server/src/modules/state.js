@@ -13,6 +13,13 @@ const state = {
       y: 0,
     },
   },
+  apple: {
+    coord: {
+      x: 0,
+      y: 0,
+    },
+  },
+  score: 0,
 };
 
 module.exports = state;
