@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "checkJs": true,
+        "paths": {
+          "modules/*": ["./src/modules/*"]
+        }
+    },
+    "include": ["src"]
+}
