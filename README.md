@@ -1,5 +1,5 @@
 # Snake
-Multiplayer snake game implemented with [p5.js] and [socket.io]
+Two-player snake game implemented with [p5.js] and [socket.io]
 
 ![Screenshot](./screenshots/snake.png)
 

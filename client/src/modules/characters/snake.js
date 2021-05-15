@@ -4,9 +4,9 @@ import { canvas } from 'modules/constants';
  * For snake's logic, see the same class in the server
  */
 class Snake {
-  constructor(p) {
+  constructor(p, colorHead) {
     this.p = p;
-    this.color = '#fff';
+    this.colorHead = colorHead;
     this.coords = [];
   }
 
@@ -14,12 +14,12 @@ class Snake {
     // draw snake using p5 rectangles
     this.coords.forEach((coord, iCoord, arr) => {
       if (iCoord === arr.length - 1) {
-        this.p.fill('#d0c871');
+        this.p.fill(this.colorHead);
       } else {
-        this.p.fill(this.color);
+        this.p.fill('#fff');
       }
 
-      this.p.stroke('#d09871');
+      this.p.stroke('#fff');
       this.p.rect(coord.x, coord.y, canvas.cell, canvas.cell);
     });
   }
