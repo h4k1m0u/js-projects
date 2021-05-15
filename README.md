@@ -14,6 +14,21 @@ $ cd server && npm install && npm start
 ```
 
 
+# Deployment
+- **Client:** deployed on Github (see `gh-pages` branch served from `dist/` folder).
+- **Server:** deployed on Heroku following [heroku-nodejs][this tutorial]:
+
+```console
+$ sudo snap install heroku --classic
+$ heroku login
+$ heroku create snake-two-players --region eu
+$ git remote -v  # verify a remote was created for heroku
+$ git subtree push --prefix server heroku master
+```
+
+[heroku-nodejs]: https://devcenter.heroku.com/articles/getting-started-with-nodejs?singlepage=true
+
+
 # Structure
 The application follows the Client-Server model, where these two components communicate using socket.io:
 
