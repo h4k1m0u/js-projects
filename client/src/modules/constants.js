@@ -1,4 +1,4 @@
-const FPS = 30;
+const fps = 30;
 const canvas = {
   width: 480,
   height: 480,
@@ -6,6 +6,6 @@ const canvas = {
 };
 
 export {
-  FPS,
+  fps,
   canvas,
 };

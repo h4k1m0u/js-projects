@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 
 import pathApple from 'images/apple.png';
 import Apple from 'modules/characters/apple';
-import { FPS } from 'modules/constants';
+import { fps } from 'modules/constants';
 import Snake from 'modules/characters/snake';
 
 // import style & images so webpack process them
@@ -35,10 +35,10 @@ function toggleMenu(isShown = true) {
   }
 }
 
-// connect to socket.io server
-const socket = io('http://localhost:3000');
+// connect to socket.io server (url passed from webpack)
+const socket = io(serverURL);
 socket.on('connect', () => {
-  console.log(`Connection with id: ${socket.id}`);
+  console.log(`Connection to ${serverURL} with id: ${socket.id}`);
 });
 
 // unfreeze/freeze new/join game buttons on startup
@@ -75,7 +75,7 @@ const sketch = (p) => {
     p.noStroke();
 
     // set fps
-    p.frameRate(FPS);
+    p.frameRate(fps);
 
     // characters instances
     snake0 = new Snake(p, '#00f');

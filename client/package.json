@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/client/index.js",
   "scripts": {
-    "start": "webpack-dev-server --open",
-    "build": "webpack --mode=production"
+    "start": "webpack-dev-server --open --env.dev",
+    "build": "webpack --mode=production --env.prod"
   },
   "author": "h4k1m0u",
   "license": "MIT",

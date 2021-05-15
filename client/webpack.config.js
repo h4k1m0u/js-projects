@@ -1,7 +1,8 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path'); // eslint-disable-line import/no-extraneous-dependencies
+const webpack = require('webpack');
 
-module.exports = {
+module.exports = (env) => ({
   entry: './src/index.js',
   output: {
     // generated inside dist/ by default
@@ -45,5 +46,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/views/index.html',
     }),
+    // inject global variable into code
+    new webpack.DefinePlugin({
+      serverURL: JSON.stringify(env.prod ? 'https://snake-two-players.herokuapp.com' : 'http://localhost:3000'),
+    }),
   ],
-};
+});
