@@ -10,7 +10,10 @@ const Apple = require('./modules/characters/apple');
 const httpServer = http.createServer();
 const socketServer = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:8080',
+    origin: [
+      'http://localhost:8080',
+      'https://h4k1m0u.github.io',
+    ],
   },
 });
 
