@@ -22,16 +22,22 @@ httpServer.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
+// global variables (accessible to all callbacks below)
+let state = null;
+let snake0 = null;
+let snake1 = null;
+let apple = null;
+let gameloop = null;
+
 /* Incoming connection from a client */
 socketServer.on('connect', (socket) => {
   console.log(`Connection from client ${socket.id}`);
 
-  // global variables
-  let state = null;
-  let snake0 = null;
-  let snake1 = null;
-  let apple = null;
-  let gameloop = null;
+  // reset state with a deep copy (json needed bcos of nested objects)
+  state = JSON.parse(JSON.stringify(stateInitial));
+  snake0 = new Snake(state.snakes[0]);
+  snake1 = new Snake(state.snakes[1]);
+  apple = new Apple(state.apple);
 
   // fired upon client disconnection
   socket.on('disconnect', (reason) => {
@@ -50,12 +56,6 @@ socketServer.on('connect', (socket) => {
 
   /* player2 joined the game */
   socket.on('joinGame', () => {
-    // reset state with a deep copy (json needed bcos of nested objects)
-    state = JSON.parse(JSON.stringify(stateInitial));
-    snake0 = new Snake(state.snakes[0]);
-    snake1 = new Snake(state.snakes[1]);
-    apple = new Apple(state.apple);
-
     // hide menu for player2 (who just joined)
     socket.emit('hideMenu');
 
@@ -124,6 +124,5 @@ socketServer.on('connect', (socket) => {
       default:
         break;
     }
-    console.log('snake0 ', snake0);
   });
 });
