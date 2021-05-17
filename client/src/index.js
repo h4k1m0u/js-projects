@@ -36,10 +36,18 @@ function toggleMenu(isShown = true) {
 }
 
 // connect to socket.io server (url passed from webpack)
-const socket = io(serverURL);
+const socket = io(serverURL); // eslint-disable-line no-undef
 socket.on('connect', () => {
-  console.log(`Connection to ${serverURL} with id: ${socket.id}`);
+  console.log(`Connection to ${serverURL} with id: ${socket.id}`); // eslint-disable-line no-undef
 });
+
+// variables set by server
+let apple = null;
+let snake0 = null;
+let snake1 = null;
+let score = 0;
+let game = {};
+let player;
 
 // unfreeze/freeze new/join game buttons on startup
 toggleMenuButtons(false);
@@ -52,14 +60,6 @@ const sketch = (p) => {
     cell: 24,
   };
   let elementScore = null;
-
-  // variables set by server
-  let apple = null;
-  let snake0 = null;
-  let snake1 = null;
-  let score = 0;
-  let game = {};
-  let player;
 
   // assets
   let imageApple = null;
@@ -85,16 +85,6 @@ const sketch = (p) => {
     // score html element below canvas
     elementScore = p.createDiv(`<b>Score:</b> ${score}`);
     elementScore.parent('game');
-
-    // update state for snake/apple/score from server
-    socket.on('stateChange', (state) => {
-      // player;
-      [snake0.coords, snake0.speed] = [state.snakes[0].coords, state.snakes[0].speed];
-      [snake1.coords, snake1.speed] = [state.snakes[1].coords, state.snakes[1].speed];
-      apple.coord = state.apple.coord;
-      score = state.game.score;
-      game = state.game;
-    });
   };
 
   p.draw = () => {
@@ -139,6 +129,16 @@ const sketch = (p) => {
     }
   };
 };
+
+// update state for snake/apple/score from server
+socket.on('stateChange', (state) => {
+  // player;
+  [snake0.coords, snake0.speed] = [state.snakes[0].coords, state.snakes[0].speed];
+  [snake1.coords, snake1.speed] = [state.snakes[1].coords, state.snakes[1].speed];
+  apple.coord = state.apple.coord;
+  score = state.game.score;
+  game = state.game;
+});
 
 /* send request (from first player) to server to join game */
 document.getElementById('new-game').addEventListener('click', () => {
