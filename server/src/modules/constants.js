@@ -2,7 +2,7 @@ module.exports = {
   canvas: {
     width: 480,
     height: 480,
-    cell: 24,
+    cellSize: 24,
   },
   keys: {
     LEFT: 37,
