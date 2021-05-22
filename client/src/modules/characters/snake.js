@@ -20,7 +20,7 @@ class Snake {
       }
 
       this.p.stroke('#fff');
-      this.p.rect(coord.x, coord.y, canvas.cell, canvas.cell);
+      this.p.rect(coord.x, coord.y, canvas.cellSize, canvas.cellSize);
     });
   }
 }

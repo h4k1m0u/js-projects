@@ -5,8 +5,8 @@ const state = {
     {
       coords: [
         {
-          x: canvas.cell,
-          y: canvas.cell,
+          x: canvas.cellSize,
+          y: canvas.cellSize,
         },
       ],
       speed: {
@@ -17,8 +17,8 @@ const state = {
     {
       coords: [
         {
-          x: canvas.width - canvas.cell,
-          y: canvas.height - canvas.cell,
+          x: canvas.width - canvas.cellSize,
+          y: canvas.height - canvas.cellSize,
         },
       ],
       speed: {

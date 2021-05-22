@@ -26,13 +26,13 @@ class Snake {
     }
 
     // move snake's head by one tile cell
-    this.head.x += this.speed.x * canvas.cell;
-    this.head.y += this.speed.y * canvas.cell;
+    this.head.x += this.speed.x * canvas.cellSize;
+    this.head.y += this.speed.y * canvas.cellSize;
   }
 
   isHittingWall() {
-    if (this.head.x === -canvas.cell || this.head.x === canvas.width ||
-        this.head.y === -canvas.cell || this.head.y === canvas.height) {
+    if (this.head.x === -canvas.cellSize || this.head.x === canvas.width ||
+        this.head.y === -canvas.cellSize || this.head.y === canvas.height) {
       return true;
     }
 

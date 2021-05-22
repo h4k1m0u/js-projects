@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 
 import pathApple from 'images/apple.png';
 import Apple from 'modules/characters/apple';
-import { fps } from 'modules/constants';
+import { canvas, fps } from 'modules/constants';
 import Snake from 'modules/characters/snake';
 
 // import style & images so webpack process them
@@ -54,11 +54,6 @@ toggleMenuButtons(false);
 
 // p5 in instance mode (namespacing) using closures
 const sketch = (p) => {
-  const canvas = {
-    width: 480,
-    height: 480,
-    cell: 24,
-  };
   let elementScore = null;
 
   // assets
@@ -142,6 +137,7 @@ socket.on('stateChange', (state) => {
 
 /* send request (from first player) to server to join game */
 document.getElementById('new-game').addEventListener('click', () => {
+  console.log('socket ', socket);
   socket.emit('newGame');
 });
 

@@ -6,20 +6,26 @@ class Apple {
     this.needsSpawn = true;
   }
 
+  /**
+   * Spawn an apple in a cell inoccupied by PC and NPC snakes
+   *
+   */
   move(snake) {
-    // wait till it's eaten before spawning it
+    // wait till apple is eaten before spawning it
     if (!this.needsSpawn) {
       return;
     }
 
     const coordsStr = snake.coords.map((coord) => `${coord.x},${coord.y}`);
     let coordStr = '';
+    const nCellsRow = canvas.width / canvas.cellSize;
+    const nCellsCol = canvas.height / canvas.cellSize;
 
     // find tiles not already occupied by snake
     do {
       // align image top-left corner on the grid
-      this.coord.x = canvas.cell * Math.floor(Math.random() * (canvas.width / canvas.cell));
-      this.coord.y = canvas.cell * Math.floor(Math.random() * (canvas.height / canvas.cell));
+      this.coord.x = canvas.cellSize * Math.floor(Math.random() * nCellsRow);
+      this.coord.y = canvas.cellSize * Math.floor(Math.random() * nCellsCol);
       coordStr = `${this.coord.x},${this.coord.y}`;
     } while (coordsStr.indexOf(coordStr) !== -1);
 
