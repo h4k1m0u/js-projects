@@ -2,10 +2,19 @@ const { canvas } = require('../constants');
 const { getXYFromCell } = require('../algorithms/tilemap');
 
 class Snake {
-  constructor(stateSnake) {
+  /**
+   * @param stateSnake  Initial coords and potentially speed of snake
+   * @param isNPC       NPC snake move to target, PC uses speed as its direction
+   */
+  constructor(stateSnake, isNPC = false) {
     this.coords = stateSnake.coords;
-    this.speed = stateSnake.speed;
     this.isDead = false;
+    this.isNPC = isNPC;
+
+    // NPC snake moves slower than PC (use counter)
+    if (!this.isNPC) {
+      this.speed = stateSnake.speed;
+    }
   }
 
   /* getter for property head */
@@ -21,7 +30,7 @@ class Snake {
   }
 
   /**
-   * Move snake's head accord. to speed if no target given, else move it to target.
+   * Move snake's head accord. to speed if PC, else move it to target.
    * Rest of snake (queue) follows its head
    *
    * @param cell  determines next position of head
@@ -33,14 +42,19 @@ class Snake {
       return;
     }
 
+    // destination cell mendatory for NPC snake
+    if (this.isNPC && cell === null) {
+      return;
+    }
+
     // shift coords from smallest to largest index
     for (let i = 0; i < this.coords.length - 1; i += 1) {
       this.coords[i].x = this.coords[i + 1].x;
       this.coords[i].y = this.coords[i + 1].y;
     }
 
-    // move snake's accord. to speed or move to target
-    if (cell === null) {
+    // move snake's accord. to speed (PC) or move to target (NPC)
+    if (!this.isNPC) {
       this.head.x += this.speed.x * canvas.cellSize;
       this.head.y += this.speed.y * canvas.cellSize;
     } else {

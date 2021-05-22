@@ -43,8 +43,8 @@ socket.on('connect', () => {
 
 // variables set by server
 let apple = null;
-let snake0 = null;
-let snake1 = null;
+let snakePC = null;
+let snakeNPC = null;
 let score = 0;
 let game = {};
 let player;
@@ -73,8 +73,8 @@ const sketch = (p) => {
     p.frameRate(fps);
 
     // characters instances
-    snake0 = new Snake(p, '#00f');
-    snake1 = new Snake(p, '#000');
+    snakePC = new Snake(p, '#00f');
+    snakeNPC = new Snake(p, '#000');
     apple = new Apple(p, imageApple);
 
     // score html element below canvas
@@ -100,8 +100,8 @@ const sketch = (p) => {
     p.background('#71a9d0');
 
     // draw sprites
-    snake0.draw();
-    snake1.draw();
+    snakePC.draw();
+    snakeNPC.draw();
     apple.draw();
 
     // show score
@@ -128,8 +128,8 @@ const sketch = (p) => {
 // update state for snake/apple/score from server
 socket.on('stateChange', (state) => {
   // player;
-  [snake0.coords, snake0.speed] = [state.snakes[0].coords, state.snakes[0].speed];
-  [snake1.coords, snake1.speed] = [state.snakes[1].coords, state.snakes[1].speed];
+  snakePC.coords = state.snakePC.coords;
+  snakeNPC.coords = state.snakeNPC.coords;
   apple.coord = state.apple.coord;
   score = state.game.score;
   game = state.game;
@@ -137,7 +137,6 @@ socket.on('stateChange', (state) => {
 
 /* send request (from first player) to server to join game */
 document.getElementById('new-game').addEventListener('click', () => {
-  console.log('socket ', socket);
   socket.emit('newGame');
 });
 

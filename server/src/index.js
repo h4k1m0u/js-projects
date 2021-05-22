@@ -35,6 +35,7 @@ let snakePC = null;
 let snakeNPC = null;
 let apple = null;
 let gameloop = null;
+let isSnakeNPCMoving = false;
 
 /* Incoming connection from a client */
 socketServer.on('connect', (socket) => {
@@ -42,9 +43,9 @@ socketServer.on('connect', (socket) => {
 
   // reset state with a deep copy (json needed bcos of nested objects)
   state = JSON.parse(JSON.stringify(stateInitial));
-  snakePC = new Snake(state.snakes[0]);
-  snakeNPC = new Snake(state.snakes[1]);
-  apple = new Apple(state.apple);
+  snakePC = new Snake(state.snakePC, false);
+  snakeNPC = new Snake(state.snakeNPC, true);
+  apple = new Apple();
 
   // fired upon client disconnection
   socket.on('disconnect', (reason) => {
@@ -54,7 +55,6 @@ socketServer.on('connect', (socket) => {
   /* player1 joined the game */
   socket.on('newGame', () => {
     // hide menu for player1 (who just joined)
-    console.log('New game...');
     socket.emit('hideMenu');
 
     // update menu buttons (freeze/unfreeze) for both players
@@ -84,37 +84,39 @@ socketServer.on('connect', (socket) => {
 
       // move PC snake (after keypress)
       snakePC.move();
+      apple.move([snakePC, snakeNPC]);
 
-      // position apple at random cell
-      apple.move(snakePC);
-
-      // check for collision between snake & apple
+      // check for snakes & apple collision (in next frame: respawn + bfs)
       if (snakePC.intersects(apple)) {
         state.game.score += 1;
         apple.needsSpawn = true;
+        shortestPath = [];
+      } else if (snakeNPC.intersects(apple)) {
+        apple.needsSpawn = true;
       }
 
-      // move NPC snake with bfs towards apple
-      const cellApple = getCellFromXY(apple.coord.x, apple.coord.y);
-      const cellSnakeNPC = getCellFromXY(snakeNPC.head.x, snakeNPC.head.y);
+      // after apple eaten, don't recalculate path till next frame
+      if (!apple.needsSpawn) {
+        // move NPC snake on BFS shortest path towards apple
+        const cellApple = getCellFromXY(apple.coord.x, apple.coord.y);
+        const cellSnakeNPC = getCellFromXY(snakeNPC.head.x, snakeNPC.head.y);
 
-      if (shortestPath.length > 0) {
-        snakeNPC.move(shortestPath.shift());
-      } else {
-        // shortest path from npc snake to apple with bfs (once every 10 frames)
-        const ancestors = bfs(cellSnakeNPC, cellApple, adjacencyMatrix);
-        shortestPath = getShortestPath(cellSnakeNPC, cellApple, ancestors);
+        if (shortestPath.length === 0) {
+          const ancestors = bfs(cellSnakeNPC, cellApple, adjacencyMatrix);
+          shortestPath = getShortestPath(cellSnakeNPC, cellApple, ancestors);
+        } else if (!isSnakeNPCMoving) {
+          // delay NPC snake movement to slow it down
+          isSnakeNPCMoving = true;
+          setTimeout(() => {
+            snakeNPC.move(shortestPath.shift());
+            isSnakeNPCMoving = false;
+          }, (1.1 * 1000) / fps);
+        }
       }
 
-      console.log('snakeNPC cell ', cellSnakeNPC);
-      console.log('apple cell ', cellApple);
-      console.log('shortestPath ', shortestPath);
-
-      // clearInterval(gameloop);
-
-      // send updated state (position/speed) for snake & apple to client
-      [state.snakes[0].coords, state.snakes[1].coords] = [snakePC.coords, snakeNPC.coords];
-      [state.snakes[0].speed, state.snakes[1].speed] = [snakePC.speed, snakeNPC.speed];
+      // send updated state (snakes & apple positions) to client
+      state.snakePC.coords = snakePC.coords;
+      state.snakeNPC.coords = snakeNPC.coords;
       state.apple.coord = apple.coord;
       state.game.isOver = snakePC.isDead;
 

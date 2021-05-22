@@ -1,36 +1,30 @@
 const { canvas } = require('./constants');
 
 const state = {
-  snakes: [
-    {
-      coords: [
-        {
-          x: canvas.cellSize,
-          y: canvas.cellSize,
-        },
-      ],
-      speed: {
-        x: 1,
-        y: 0,
+  snakePC: {
+    coords: [
+      {
+        x: canvas.cellSize,
+        y: canvas.cellSize,
       },
+    ],
+    speed: {
+      x: 1,
+      y: 0,
     },
-    {
-      coords: [
-        {
-          x: canvas.width - canvas.cellSize,
-          y: canvas.height - canvas.cellSize,
-        },
-      ],
-      speed: {
-        x: -1,
-        y: 0,
+  },
+  snakeNPC: {
+    coords: [
+      {
+        x: canvas.width - canvas.cellSize,
+        y: canvas.height - canvas.cellSize,
       },
-    },
-  ],
+    ],
+  },
   apple: {
     coord: {
-      x: 0,
-      y: 0,
+      x: null,
+      y: null,
     },
   },
   game: {

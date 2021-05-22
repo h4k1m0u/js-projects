@@ -10,16 +10,19 @@ class Snake {
     this.coords = [];
   }
 
+  /**
+   * Draw snake using p5 rectangles
+   * Head distinguished from other parts by its contour
+   */
   draw() {
-    // draw snake using p5 rectangles
     this.coords.forEach((coord, iCoord, arr) => {
       if (iCoord === arr.length - 1) {
-        this.p.fill(this.colorHead);
+        this.p.stroke('#fff');
       } else {
-        this.p.fill('#fff');
+        this.p.stroke(this.colorHead);
       }
 
-      this.p.stroke('#fff');
+      this.p.fill(this.colorHead);
       this.p.rect(coord.x, coord.y, canvas.cellSize, canvas.cellSize);
     });
   }

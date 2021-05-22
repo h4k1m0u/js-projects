@@ -13,5 +13,5 @@ module.exports = {
     DOWN: 40,
     ENTER: 13,
   },
-  fps: 10,
+  fps: 5,
 };
