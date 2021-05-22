@@ -18,14 +18,12 @@ class Apple {
 
     const coordsStr = snake.coords.map((coord) => `${coord.x},${coord.y}`);
     let coordStr = '';
-    const nCellsRow = canvas.width / canvas.cellSize;
-    const nCellsCol = canvas.height / canvas.cellSize;
 
     // find tiles not already occupied by snake
     do {
       // align image top-left corner on the grid
-      this.coord.x = canvas.cellSize * Math.floor(Math.random() * nCellsRow);
-      this.coord.y = canvas.cellSize * Math.floor(Math.random() * nCellsCol);
+      this.coord.x = canvas.cellSize * Math.floor(Math.random() * canvas.nCellsRow);
+      this.coord.y = canvas.cellSize * Math.floor(Math.random() * canvas.nCellsCol);
       coordStr = `${this.coord.x},${this.coord.y}`;
     } while (coordsStr.indexOf(coordStr) !== -1);
 

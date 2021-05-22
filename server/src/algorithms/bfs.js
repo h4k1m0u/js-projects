@@ -71,7 +71,7 @@ const bfs = (nodeSrc, nodeDest, adjacencyMatrix) => {
  * @param  nodeSrc    Source node where to stop retro-traversal
  * @param  nodeDest   Destination node from which to retro-traverse ancestors array
  * @param  ancestors  Map with key: node, value: its direct ancestor node
- * @return path       Path array from source node (excl.) to destination node (incl.)
+ * @return path       Array of cells from source node (excl.) to destination node (incl.)
  */
 const getShortestPath = (nodeSrc, nodeDest, ancestors) => {
   let node = nodeDest;

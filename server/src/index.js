@@ -11,8 +11,7 @@ const { calculateAdjacencyMatrix, getCellFromXY } = require('./algorithms/tilema
 const { bfs, getShortestPath } = require('./algorithms/bfs');
 
 // generate adjacency matrix for tilemap
-const [nCellsRow, nCellsCol] = [canvas.width / canvas.cellSize, canvas.height / canvas.cellSize];
-const adjacencyMatrix = calculateAdjacencyMatrix(nCellsRow, nCellsCol);
+const adjacencyMatrix = calculateAdjacencyMatrix(canvas.nCellsRow, canvas.nCellsCol);
 
 // bind socketio server to http server (allow socketio.client address)
 const httpServer = http.createServer();
@@ -64,6 +63,7 @@ socketServer.on('connect', (socket) => {
   });
 
   /* player2 joined the game */
+  let shortestPath = [];
   socket.on('joinGame', () => {
     // hide menu for player2 (who just joined)
     socket.emit('hideMenu');
@@ -82,12 +82,11 @@ socketServer.on('connect', (socket) => {
         clearInterval(gameloop);
       }
 
-      // create apple
-      apple.move(snakePC);
-
-      // move snake & position apple
+      // move PC snake (after keypress)
       snakePC.move();
-      snakeNPC.move();
+
+      // position apple at random cell
+      apple.move(snakePC);
 
       // check for collision between snake & apple
       if (snakePC.intersects(apple)) {
@@ -95,16 +94,23 @@ socketServer.on('connect', (socket) => {
         apple.needsSpawn = true;
       }
 
-      // shortest path from npc snake to apple with bfs (once every 10 frames)
+      // move NPC snake with bfs towards apple
       const cellApple = getCellFromXY(apple.coord.x, apple.coord.y);
-      const cellSnake1 = getCellFromXY(snakeNPC.head.x, snakeNPC.head.y);
-      const ancestors = bfs(cellSnake1, cellApple, adjacencyMatrix);
-      const shortestPath = getShortestPath(cellSnake1, cellApple, ancestors);
+      const cellSnakeNPC = getCellFromXY(snakeNPC.head.x, snakeNPC.head.y);
 
-      console.log('snakeNPC cell ', cellSnake1);
+      if (shortestPath.length > 0) {
+        snakeNPC.move(shortestPath.shift());
+      } else {
+        // shortest path from npc snake to apple with bfs (once every 10 frames)
+        const ancestors = bfs(cellSnakeNPC, cellApple, adjacencyMatrix);
+        shortestPath = getShortestPath(cellSnakeNPC, cellApple, ancestors);
+      }
+
+      console.log('snakeNPC cell ', cellSnakeNPC);
       console.log('apple cell ', cellApple);
       console.log('shortestPath ', shortestPath);
-      clearInterval(gameloop);
+
+      // clearInterval(gameloop);
 
       // send updated state (position/speed) for snake & apple to client
       [state.snakes[0].coords, state.snakes[1].coords] = [snakePC.coords, snakeNPC.coords];

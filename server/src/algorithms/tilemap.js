@@ -4,17 +4,31 @@ const { canvas } = require('../constants');
 /**
  * Find index of cell corresp. to pixel coordinates (x, y)
  *
- * @param x      Pixel coordinate x
- * @param y      Pixel coordinate y
+ * @param x      Pixel coordinate x of upper-left corner of cell
+ * @param y      Pixel coordinate y of upper-left corner of cell
  * @return cell  Index of cell with cell0 being at upper-left corner
  */
 const getCellFromXY = (x, y) => {
-  const nCellsRow = canvas.width / canvas.cellSize;
   const cellX = x / canvas.cellSize;
   const cellY = y / canvas.cellSize;
-  const cell = cellY * nCellsRow + cellX;
+  const cell = cellY * canvas.nCellsRow + cellX;
 
   return cell;
+};
+
+/**
+ * Find pixel coordinates (x, y) from cell index
+ *
+ * @param cell    Index of cell with cell0 being at upper-left corner
+ * @return {x,y}  Pixel coordinates of upper-left corner of cell
+ */
+const getXYFromCell = (cell) => {
+  const cellX = cell % canvas.nCellsRow;
+  const cellY = Math.floor(cell / canvas.nCellsRow);
+  const x = cellX * canvas.cellSize;
+  const y = cellY * canvas.cellSize;
+
+  return { x, y };
 };
 
 /**
@@ -56,5 +70,6 @@ const calculateAdjacencyMatrix = (nCellsRow, nCellsCol) => {
 
 module.exports = {
   getCellFromXY,
+  getXYFromCell,
   calculateAdjacencyMatrix,
 };

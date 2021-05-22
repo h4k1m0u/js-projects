@@ -3,6 +3,8 @@ module.exports = {
     width: 480,
     height: 480,
     cellSize: 24,
+    nCellsRow: 480 / 24,
+    nCellsCol: 480 / 24,
   },
   keys: {
     LEFT: 37,
